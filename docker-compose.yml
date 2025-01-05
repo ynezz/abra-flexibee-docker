@@ -9,7 +9,7 @@ services:
     env_file: config.env
   flexibee:
     ports:
-        - "15434:5434"
+        - "5434:5434"
     build:
       context: .
       dockerfile: Dockerfile
@@ -17,4 +17,9 @@ services:
       - postgres
     env_file: config.env
 volumes:
-  pgdata-flexibee: {}
+  pgdata-flexibee:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ynezz/data-postgres
