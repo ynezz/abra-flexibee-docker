@@ -7,6 +7,12 @@ services:
     volumes:
       - pgdata-flexibee:/var/lib/postgresql/data:rw
     env_file: config.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   flexibee:
     restart: unless-stopped
     ports:
@@ -15,7 +21,8 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file: config.env
 volumes:
   pgdata-flexibee:
