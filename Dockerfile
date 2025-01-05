@@ -5,12 +5,11 @@ ENV TZ="Europe/Prague"
 RUN apt-get update && apt-get install -y --fix-missing --no-install-recommends curl ca-certificates postgresql-13 \
     postgresql-contrib-13 postgresql-client-common wget apt-transport-https gnupg supervisor expect xdg-utils
 
-RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+# https://adoptium.net/installation/linux/
+RUN apt install -y wget apt-transport-https gpg
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-RUN apt-get update && apt-get install -y --fix-missing --no-install-recommends temurin-8-jre
-#RUN wget -O- https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
-#RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
-#RUN apt-get update && apt-get install -y --fix-missing --no-install-recommends adoptopenjdk-8-hotspot adoptopenjdk-8-hotspot-jre
+RUN apt update && apt install -y --fix-missing --no-install-recommends temurin-11-jre
 
 RUN apt-get install -y locales locales-all
 RUN echo "cs_CZ.utf8 UTF-8" >> /etc/locale.gen
