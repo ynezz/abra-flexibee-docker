@@ -8,6 +8,7 @@ services:
       - pgdata-flexibee:/var/lib/postgresql/data:rw
     env_file: config.env
   flexibee:
+    restart: unless-stopped
     ports:
         - "5434:5434"
     build:
